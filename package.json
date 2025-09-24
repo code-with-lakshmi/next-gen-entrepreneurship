@@ -1,0 +1,28 @@
+{
+  "name": "next-gen-entrepreneurship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-with-lakshmi/next-gen-entrepreneurship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/code-with-lakshmi/next-gen-entrepreneurship/issues"
+  },
+  "homepage": "https://github.com/code-with-lakshmi/next-gen-entrepreneurship#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
