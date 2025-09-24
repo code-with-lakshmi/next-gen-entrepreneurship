@@ -1,10 +1,12 @@
 // Minimal Express server for development
 const express = require('express');
+const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Basic middleware
 app.use(express.json());
+app.use(cors());
 
 // Health check
 app.get('/health', (_req, res) => {
@@ -13,7 +15,12 @@ app.get('/health', (_req, res) => {
 
 // Root route
 app.get('/', (_req, res) => {
-  res.send('<h1>Next Gen Entrepreneurship API</h1><p>Server is running.</p>');
+  res.type('text').send('✅ Backend server is working!');
+});
+
+// API route for frontend sample
+app.get('/api/hello', (_req, res) => {
+  res.json({ message: 'Hello from backend' });
 });
 
 app.listen(PORT, () => {

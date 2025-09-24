@@ -2,10 +2,13 @@
   "name": "next-gen-entrepreneurship",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
+    "dev": "npm --prefix frontend run dev",
+    "dev:all": "concurrently -k -n FRONTEND,BACKEND -c green,blue \"npm --prefix frontend run dev\" \"npm run server\"",
+    "server": "node server.js",
+    "server:dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,9 +23,11 @@
   },
   "homepage": "https://github.com/code-with-lakshmi/next-gen-entrepreneurship#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "concurrently": "^9.1.2"
   }
 }
