@@ -1,8 +1,83 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@reference "tailwindcss";
 
 /* Optional: base element tweaks */
 html, body, #root {
   height: 100%;
+}
+
+/* NeuroBizTwin Dark Gradient Theme */
+@layer base {
+  body {
+    @apply bg-gray-950 text-gray-100;
+    background: linear-gradient(135deg, rgb(15 23 42), rgb(2 6 23) 40%, rgb(0 0 0));
+  }
+}
+
+@layer components {
+  .nbt-bg {
+    @apply min-h-screen w-full flex items-center justify-center px-4 py-8;
+    background: radial-gradient(1200px 600px at 50% -100px, rgba(99,102,241,0.25), transparent 60%),
+                radial-gradient(1000px 500px at 120% 20%, rgba(168,85,247,0.20), transparent 60%),
+                linear-gradient(135deg, rgb(2 6 23), rgb(3 7 18) 50%, rgb(0 0 0));
+  }
+
+  .nbt-card-wrap {
+    @apply relative w-full max-w-md;
+  }
+
+  .nbt-card-glow {
+    @apply absolute -inset-0.5 rounded-2xl opacity-40 blur;
+    background: linear-gradient(90deg, rgb(99 102 241), rgb(217 70 239), rgb(34 211 238));
+  }
+
+  .nbt-card {
+    @apply relative rounded-2xl bg-gray-900/90 border border-gray-800 p-8 shadow-2xl backdrop-blur;
+  }
+
+  .nbt-title {
+    @apply text-3xl font-extrabold text-center tracking-tight;
+    background: linear-gradient(90deg, rgb(129 140 248), rgb(167 139 250));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .nbt-subtitle {
+    @apply text-sm text-gray-400 text-center mt-2;
+  }
+
+  .nbt-input {
+    @apply w-full rounded-lg bg-gray-800/80 border border-gray-700 px-3 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+  }
+
+  .nbt-radio {
+    @apply flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/50 px-3 py-2 text-gray-200 hover:border-gray-600 cursor-pointer;
+  }
+
+  .nbt-btn-primary {
+    @apply bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500 hover:from-indigo-600 hover:via-fuchsia-600 hover:to-cyan-600 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow;
+  }
+
+  .nbt-btn-secondary {
+    @apply bg-gray-800 hover:bg-gray-700 text-gray-100 px-4 py-2 rounded-lg border border-gray-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .nbt-grid-roles {
+    @apply grid grid-cols-1 gap-2 sm:grid-cols-2;
+  }
+
+  .nbt-role-card-primary {
+    @apply rounded-xl border border-indigo-700/40 p-5 text-left text-gray-100 shadow transition-transform hover:shadow-indigo-700/30;
+    background: linear-gradient(135deg, rgba(79,70,229,0.25), rgba(147,51,234,0.25));
+  }
+
+  .nbt-role-card-secondary {
+    @apply rounded-xl border border-fuchsia-700/40 p-5 text-left text-gray-100 shadow transition-transform hover:shadow-fuchsia-700/30;
+    background: linear-gradient(135deg, rgba(147,51,234,0.25), rgba(236,72,153,0.25));
+  }
+
+  .nbt-role-card:hover {
+    transform: scale(1.02);
+  }
 }

@@ -1,27 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import './App.css'
-import { fetchMessage } from './api'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Auth from './components/Auth'
+import Dashboard from './components/Dashboard'
+import RoleSelect from './components/RoleSelect'
 
 function App() {
-  const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    let mounted = true
-    fetchMessage().then((data) => {
-      if (mounted) setMessage(data?.message ?? '')
-    })
-    return () => { mounted = false }
-  }, [])
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <main className="text-center w-full max-w-2xl">
-        <h1 className="text-3xl font-bold text-blue-600">NeuroBizTwin Dashboard</h1>
-        <p className="text-lg text-gray-700 mt-4">{message || 'Loading...'}</p>
-        <Auth />
-      </main>
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/roleselect" replace />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/roleselect" element={<RoleSelect />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
 
