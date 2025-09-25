@@ -1,0 +1,6 @@
+date,channel,spend,impressions,clicks,conversions
+2023-01-01,facebook,100,1000,100,10
+2023-01-01,google,200,1500,150,20
+2023-01-02,facebook,120,1100,105,12
+2023-01-02,google,220,1600,160,25
+2023-01-03,facebook,130,1200,115,13

@@ -24,7 +24,8 @@
   "homepage": "https://github.com/code-with-lakshmi/next-gen-entrepreneurship#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",

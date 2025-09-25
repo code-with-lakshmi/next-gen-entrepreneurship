@@ -6,6 +6,7 @@ export default function Auth() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
   const [role, setRole] = useState('startup')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,16 +17,17 @@ export default function Auth() {
     } catch {}
   }, [])
 
-  const upsertProfile = async (userId, selectedRole) => {
+  const upsertProfile = async (userId, selectedRole, uname) => {
     const { error } = await supabase
       .from('profiles')
       .upsert(
         {
-          user_id: userId,
+          id: userId,
           role: selectedRole,
-          quote: 'Dream big, start small.',
+          username: uname || null,
+          quote: null,
         },
-        { onConflict: 'user_id' }
+        { onConflict: 'id' }
       )
     if (error) {
       console.warn('Profile upsert error (ensure profiles table exists):', error)
@@ -35,6 +37,11 @@ export default function Auth() {
   const signUp = async () => {
     setLoading(true)
     setMessage('')
+    if (!username || username.trim().length === 0) {
+      setMessage('Please enter a username to continue.')
+      setLoading(false)
+      return
+    }
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) {
       setMessage(`Sign up error: ${error.message}`)
@@ -44,7 +51,13 @@ export default function Auth() {
     // If email confirmation is off, data.user is available now.
     const user = data?.user
     if (user?.id) {
-      await upsertProfile(user.id, role)
+      // Prefer role from localStorage if available
+      let chosen = role
+      try {
+        const r = localStorage.getItem('selectedRole')
+        if (r === 'startup' || r === 'past') chosen = r
+      } catch {}
+      await upsertProfile(user.id, chosen, username.trim())
     }
     setMessage('Sign up success! Redirecting…')
     setLoading(false)
@@ -62,27 +75,34 @@ export default function Auth() {
     }
     const user = data?.user
     if (user?.id) {
-      // fetch role
+      // fetch role and username
       const { data: profile, error: pErr } = await supabase
         .from('profiles')
-        .select('role')
-        .eq('user_id', user.id)
+        .select('role, username')
+        .eq('id', user.id)
         .maybeSingle()
       if (pErr) {
         console.warn('Fetch profile error:', pErr)
-      } else if (!profile) {
+      } else if (profile) {
+        try {
+          if (profile.username) localStorage.setItem('username', profile.username)
+        } catch {}
+      } else {
         // If missing profile, create with selected role fallback
-        await upsertProfile(user.id, role)
+        await upsertProfile(user.id, role, null)
       }
     }
     // If profile has role -> dashboard
     try {
       const { data: check } = await supabase
         .from('profiles')
-        .select('role')
-        .eq('user_id', (await supabase.auth.getUser()).data.user.id)
+        .select('role, username')
+        .eq('id', (await supabase.auth.getUser()).data.user.id)
         .maybeSingle()
       if (check?.role) {
+        try {
+          if (check.username) localStorage.setItem('username', check.username)
+        } catch {}
         navigate('/dashboard')
       } else {
         // try localStorage role, upsert, then go dashboard
@@ -93,7 +113,7 @@ export default function Auth() {
         } catch {}
         const current = (await supabase.auth.getUser()).data.user
         if (current?.id && chosen) {
-          await upsertProfile(current.id, chosen)
+          await upsertProfile(current.id, chosen, null)
           navigate('/dashboard')
         } else {
           navigate('/roleselect')
@@ -116,6 +136,17 @@ export default function Auth() {
           </div>
 
           <div className="space-y-5">
+            <div>
+              <label className="block text-sm text-gray-300 mb-1">Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="nbt-input"
+                placeholder="Enter your name"
+              />
+              <p className="mt-1 text-xs text-gray-500">Required for Sign Up. Ignored for Sign In.</p>
+            </div>
             <div>
               <label className="block text-sm text-gray-300 mb-1">Email</label>
               <input
