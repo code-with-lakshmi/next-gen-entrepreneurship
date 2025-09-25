@@ -34,14 +34,14 @@ export default function MyProfile() {
       // Fetch profile
       const { data: profile, error: pErr } = await supabase
         .from('profiles')
-        .select('role, username, quote')
+        .select('role, username, quotes')
         .eq('id', user.id)
         .maybeSingle()
 
       if (!pErr && profile) {
         setRole(profile.role || '')
         setUsername(profile.username || '')
-        setQuote(profile.quote || '')
+        setQuote(profile.quotes || '')
       }
       setLoading(false)
     }
@@ -70,7 +70,7 @@ export default function MyProfile() {
         {
           id: userId,
           username: username?.trim() || null,
-          quote: quote?.trim() || null,
+          quotes: quote?.trim() || null,
           role: role || null,
         },
         { onConflict: 'id' }

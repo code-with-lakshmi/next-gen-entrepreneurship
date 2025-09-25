@@ -30,17 +30,27 @@ export default function Dashboard() {
       setEmail(user.email ?? '')
       const nameFromMeta = user.user_metadata?.name || user.user_metadata?.full_name || ''
       if (nameFromMeta) setDisplayName(nameFromMeta)
+      // Prefer username from auth metadata for greeting
+      const metaUsername = user.user_metadata?.username || ''
+      if (metaUsername) {
+        setUsername(metaUsername)
+      } else if (user.email) {
+        // derive a friendly handle from email local-part as fallback
+        const localPart = user.email.split('@')[0]
+        if (localPart) setUsername(localPart)
+      }
 
       const { data: profile, error: pErr } = await supabase
         .from('profiles')
-        .select('role, quote, username')
+        .select('role, quotes, username')
         .eq('id', user.id)
         .maybeSingle()
 
       if (!pErr && profile) {
         setRole(profile.role || '')
-        setQuote(profile.quote || '')
-        setUsername(profile.username || '')
+        setQuote(profile.quotes || '')
+        // Only use profile username if metadata username is not available
+        if (!metaUsername) setUsername(profile.username || '')
         try {
           if (profile.username) localStorage.setItem('username', profile.username)
         } catch {}
@@ -123,7 +133,7 @@ export default function Dashboard() {
               {/* Welcome Card */}
               <div className="rounded-xl border border-indigo-900/30 bg-gray-900/70 p-5 md:p-6 shadow-md shadow-indigo-500/20">
                 <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
-                  Welcome, {username || email || 'there'}!
+                  Welcome, {username || (email ? email.split('@')[0] : '')}!
                 </h1>
                 <p className="text-gray-400 mt-1">Your journey starts here.</p>
                 <div className="mt-4 rounded-lg bg-black/30 border border-gray-800 p-4">

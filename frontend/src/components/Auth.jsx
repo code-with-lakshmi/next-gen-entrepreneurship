@@ -25,7 +25,7 @@ export default function Auth() {
           id: userId,
           role: selectedRole,
           username: uname || null,
-          quote: null,
+          quotes: null,
         },
         { onConflict: 'id' }
       )
@@ -42,7 +42,11 @@ export default function Auth() {
       setLoading(false)
       return
     }
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { username: username.trim() } },
+    })
     if (error) {
       setMessage(`Sign up error: ${error.message}`)
       setLoading(false)
